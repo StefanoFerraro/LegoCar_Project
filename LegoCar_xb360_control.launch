@@ -1,0 +1,10 @@
+<launch>
+
+	<node pkg="joy" name="joy_node" type="joy_node" output="screen"> </node>
+
+	<node pkg="xb360_teleop_interface" name="xb360_teleop_interface_node" type="xb360_teleop_interface" output="screen"> </node>
+
+  	<node pkg="l298n_drive" name="l298n_drive_node" type="l298n_drive" output="screen" launch-prefix="sudo -E LD_LIBRARY_PATH=$(optenv LD_LIBRARY_PATH)"> </node>
+  <!-- Option -E preserve the environment except the variable PATH and LD_LIBRARY_PATH, so it is explicitely sent to the sudo environment -->
+  	
+</launch>
