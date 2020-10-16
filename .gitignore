@@ -1,2 +1,4 @@
 WiringPi
 .catkin_tools/
+raspicam_node
+.ipynb_checkpoints

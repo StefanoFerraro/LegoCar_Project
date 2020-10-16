@@ -8,13 +8,30 @@ From the hardware side, the system is based on: **Raspberry Pi4b** for controlli
 
 The software development is based on the **ROS** framework, code has been written both in **C++** and **Python**. Driver/Controller libraries has been written for this specific hardware/configuration (feel free to ask if you need help with your specific configuration).
 
-## **1- Hardware Overview**
+## **1 - Software Overview**
+
+### **1.1 - Structure**
+
+* **l298n_drive**: ROS package (C++) for interpreting /cmd_vel messages and converting it into actual motion.
+* **xb360_teleop_interface**: ROS package (C++) for interpreting /joy messages and converting it into a /cmd_vel message.
+* **line_detect**: ROS package (Python) running the perception algorithm. 
+
+
+### **1.2 - Packages Dependencies**
+
+The following project require the integration of existing ROS packages/libraries:
+* [**WiringPi**](http://wiringpi.com/): ROS library (C) for RPi GPIO access
+* [**raspicam_node**](https://github.com/UbiquityRobotics/raspicam_node): ROS package for image acquisition from Picamera, the image stream is published as a message of type Sensor_msgs/CompressedImage. 
+* **
+
+
+## **2- Hardware Overview**
 
 <img src="pics/Hardware1.png" alt="Hardw1">
 
 The Lego car model has been custom build for this specific project, it consist of a rear traction system (with differential steering), and a simple steering system in the front. A good starting point for a similar design is proposed here: [Fast and Compact LEGO PF RC car](https://www.youtube.com/watch?v=oS-6K2MqfjM). All the Lego pieces used in the construction were already available to me, almost all the parts comes from the 42030 Lego kit. The overall design of the car presented in this project is the result of multiple iterations. 
 
-### **1.1 - Motors and Battery Pack**
+### **2.1 - Motors and Battery Pack**
 A [Lego Power Function XL Motor](https://www.lego.com/it-it/product/lego-power-functions-xl-motor-8882) has been used for the traction system. For the steering system, a servo motor was needed in order to have precise control over the steering angle, I opted for a [Lego Power Function Servo Motor](https://www.lego.com/it-it/product/power-functions-servo-motor-88004), this specific motor has 15 fixed positions from +90° to -90°. 
 
 <img src="pics/battery_pack.JPG" alt="battery" width="400">
@@ -31,7 +48,7 @@ In order to connect all the components without rewiring all the cables, and ther
 
 <img src="pics/connection.JPG" alt="connect" width="400">
 
-### **1.2 - Motors Driver**
+### **2.2 - Motors Driver**
 
 A **L298n** module is used in order to control the XL function motor and the Servo one. The later has a control electronics slightly different from the classic 3 wires servo, it consist of 4 wires, one wire controls the servo in the clockwise direction (0..+90°) and the other along the anti-clockwise (0..-90°).
 
@@ -85,7 +102,7 @@ With respect of the l298n functional scheme, `Input3` and `Input4` are used for 
 
 **Raspberry Pi4** has 4 IO that can output hardware PWM signals (as reference see: [Raspberry Pi GPIO](https://www.raspberrypi.org/documentation/usage/gpio/)). In this project I have used (in BCM notation) GPIO19 and GPIO18 as output PWM channels, GPIO14, GPIO15, GPIO16, GPIO20 as standard output channels.  
 
-### **1.3 - PiCamera**
+### **2.3 - PiCamera**
 
 The camera used was already available to me (reused from another project), it has a 75° vision angle, with IR features ([Camera Link](https://it.banggood.com/Camera-Module-For-Raspberry-Pi-4-Model-B-or-3-Model-B-or-2B-or-B+-or-A+-p-1051437.html?rmmds=buy&cur_warehouse=UK)). In the donkey car project they are using a wide angle lens (120/150° angle) in order to get a better vision around the car, this can be useful in order to have more information about the environment in one pic, but also can 'distract' the perception algorithm with useless informations. We will discuss further this aspect in the perception algorithm repo.
 
@@ -93,7 +110,7 @@ The camera, has been fixed using little screws onto a planar lego piece, that is
 
 <img src="pics/camera_setup.png" alt="camera_setup">
 
-### **1.4 - RPi and Xbox Controller**
+### **2.4 - RPi and Xbox Controller**
 
 The Raspberry Pi is powered by a second battery that outputs 5V/3A as requested by the RPi. The battery serves also as mounting support for the RPi and the controller receiver.
 
@@ -101,7 +118,6 @@ The Raspberry Pi is powered by a second battery that outputs 5V/3A as requested 
 
 In the images above the is shown the sliding system of the battery, this guarantee an easy access to the electronics below when needed. The Xbox360 receiver is fixed in place using patafix. An handle has been designed in order easily transport the car manually.
 
-## **2 - Software Overview**
 
 
 
