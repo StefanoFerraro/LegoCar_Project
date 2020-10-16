@@ -87,6 +87,24 @@ With respect of the l298n functional scheme, `Input3` and `Input4` are used for 
 
 ### **1.3 - PiCamera**
 
+The camera used was already available to me (reused from another project), it has a 75° vision angle, with IR features ([Camera Link](https://it.banggood.com/Camera-Module-For-Raspberry-Pi-4-Model-B-or-3-Model-B-or-2B-or-B+-or-A+-p-1051437.html?rmmds=buy&cur_warehouse=UK)). In the donkey car project they are using a wide angle lens (120/150° angle) in order to get a better vision around the car, this can be useful in order to have more information about the environment in one pic, but also can 'distract' the perception algorithm with useless informations. We will discuss further this aspect in the perception algorithm repo.
+
+The camera, has been fixed using little screws onto a planar lego piece, that is part of a adjustable inclination mount.
+
+<img src="pics/camera_setup.png" alt="camera_setup">
+
+### **1.4 - RPi and Xbox Controller**
+
+The Raspberry Pi is powered by a second battery that outputs 5V/3A as requested by the RPi. The battery serves also as mounting support for the RPi and the controller receiver.
+
+<img src="pics/Hardware2.png" alt="hardware2">
+
+In the images above the is shown the sliding system of the battery, this guarantee an easy access to the electronics below when needed. The Xbox360 receiver is fixed in place using patafix. An handle has been designed in order easily transport the car manually.
+
+## **2 - Software Overview**
+
+
+
 
 
 
