@@ -16,13 +16,15 @@ The software development is based on the **ROS** framework, code has been writte
 * **xb360_teleop_interface**: ROS package (C++) for interpreting /joy messages and converting it into a /cmd_vel message.
 * **line_detect**: ROS package (Python) running the perception algorithm. 
 
+Details for each package can be 
+
 
 ### **1.2 - Packages Dependencies**
 
 The following project require the integration of existing ROS packages/libraries:
 * [**WiringPi**](http://wiringpi.com/): ROS library (C) for RPi GPIO access
 * [**raspicam_node**](https://github.com/UbiquityRobotics/raspicam_node): ROS package for image acquisition from Picamera, the image stream is published as a message of type Sensor_msgs/CompressedImage. 
-* **
+
 
 
 ## **2- Hardware Overview**
