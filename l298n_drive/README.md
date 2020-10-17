@@ -23,3 +23,12 @@ This library exploit [WiringPi](http://wiringpi.com/) to get access to the GPIO 
 
 Prefix consist of `sudo -E` for running the node with administrator privileges, preserving the environment when running the command (WITH some exception, variables like PATH, LD_LIBRARY_PATH, ecc. are not preserved).  Moreover we need to specify the library path `LD_LIBRARY_PATH`, that is not preserved in as environment variable. 
 
+Refer to the following table for the linear motor control:
+
+|    Motion      | In1 | In2 | EnA (PWM duty cycle %) |
+|----------|-------------|-------------|------------------------------|
+| Forward  | 1           | 0           | 0..100                       |
+| Backward | 0           | 1           | 0..100                       |
+| Brake    | 1           | 1           | 100                          |
+| Float    | 0           | 0           | 0                            |
+

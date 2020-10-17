@@ -18,10 +18,16 @@
 // define gpio channels for each input required by the l298n 
 #define In1		15
 #define In2		14
-#define En1		18
+#define EnA		18
 #define In3		16
 #define In4		20
-#define En2		19
+#define EnB		19
+
+int PWM_DC_Range;
+
+double linear_range;
+double angular_range;
+double steering_maxDC;
 
  // +-----+-----+---------+------+---+---Pi 4B--+---+------+---------+-----+-----+
  // | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
@@ -57,21 +63,21 @@ void _init()
 
 	pinMode(In1, OUTPUT);
 	pinMode(In2, OUTPUT);
-	pinMode(En1, PWM_OUTPUT);
+	pinMode(EnA, PWM_OUTPUT);
 	pinMode(In3, OUTPUT);
 	pinMode(In4, OUTPUT);
-	pinMode(En2, PWM_OUTPUT);
+	pinMode(EnB, PWM_OUTPUT);
 
 	pwmSetMode(PWM_MODE_MS);	//mark space pwm mode, it is the classic way to intend a pwm signal, other option is balanced
-	int PWM_DC_Range = 1024;	//Duty Cycle range for PWMs signal 
+	PWM_DC_Range = 1024;	// Duty Cycle range for PWMs signal 
 	pwmSetRange (PWM_DC_Range);
 
 	digitalWrite(In1, 0);
 	digitalWrite(In2, 0);
-    pwmWrite(En1, 0);
+    pwmWrite(EnA, 0);
 	digitalWrite(In3, 0);
 	digitalWrite(In4, 0);
-	pwmWrite(En2, 0);
+	pwmWrite(EnB, 0);
 
 	ROS_INFO_STREAM("GPIO initialization completed");
 }
@@ -79,13 +85,13 @@ void _init()
 // function for extrapolation of the linear value from the cmd_vel message to duty cycle percentage
 double cmd_vel_lin_conv(const geometry_msgs::Twist& msg)
 {	
-	return msg.linear.x/0.5 * PWM_DC_Range;		
+	return msg.linear.x/linear_range * PWM_DC_Range;		
 }
 
 // function for extrapolation of the angular value from the cmd_vel message to duty cycle percentage
 double cmd_vel_ang_conv(const geometry_msgs::Twist& msg)
 {
-	return msg.angular.z/0.5 * (PWM_DC_Range * 0.8);	//steering motion needs to be limited to 80%, due to the constuction condition
+	return msg.angular.z/angular_range * (PWM_DC_Range * steering_maxDC);	//steering motion needs to be limited to 80%, due to the constuction condition
 }
 
 static void cmd_vel_act(const geometry_msgs::Twist& msg)
@@ -98,14 +104,14 @@ static void cmd_vel_act(const geometry_msgs::Twist& msg)
 	{
 		digitalWrite(In1, 1);
 		digitalWrite(In2, 1);
-		pwmWrite(En1, 1024);
+		pwmWrite(EnA, 1024);
 	}
 
 	if (throttle > (PWM_DC_Range*0.1))		// backward
 	{
 		digitalWrite(In1, 1);
 		digitalWrite(In2, 0);
-		pwmWrite(En1, (int)throttle);
+		pwmWrite(EnA, (int)throttle);
 	}
 	
 	if (throttle < -(PWM_DC_Range*0.1))	// forward
@@ -113,21 +119,21 @@ static void cmd_vel_act(const geometry_msgs::Twist& msg)
 		throttle = abs(throttle);
 		digitalWrite(In1, 0);
 		digitalWrite(In2, 1);
-		pwmWrite(En1, (int)throttle);
+		pwmWrite(EnA, (int)throttle);
 	}
 
 	if (abs(stearing) <= (PWM_DC_Range*0.05))	// stearing to the center
 	{
 		digitalWrite(In3, 0);
 		digitalWrite(In4, 0);
-		digitalWrite(En2, 1);
+		digitalWrite(EnB, 1);
 	}
 
 	if (stearing > (PWM_DC_Range*0.05))		// turn left
 	{
 		digitalWrite(In3, 0);
 		digitalWrite(In4, 1);
-		pwmWrite(En2, (int)stearing);
+		pwmWrite(EnB, (int)stearing);
 	}
 
 	if (stearing < -(PWM_DC_Range*0.05))		// turn right
@@ -135,7 +141,7 @@ static void cmd_vel_act(const geometry_msgs::Twist& msg)
 		stearing = abs(stearing);
 		digitalWrite(In3, 1);
 		digitalWrite(In4, 0);
-		pwmWrite(En2, (int)stearing);
+		pwmWrite(EnB, (int)stearing);
 	}
 }
 
@@ -144,6 +150,10 @@ int main (int argc, char **argv)
 	ros::init (argc, argv, "l298n_drive");
 
 	ros::NodeHandle nh;
+
+	nh.getParam("Legocar/linear_range", linear_range);
+	nh.getParam("Legocar/angular_range", angular_range);
+	nh.getParam("Legocar/steering_maxDC", steering_maxDC);
 
 	_init();
 

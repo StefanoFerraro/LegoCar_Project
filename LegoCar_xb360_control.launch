@@ -1,5 +1,7 @@
 <launch>
 
+	<rosparam command="load" file="config/config.yaml"/>
+
 	<node pkg="joy" name="joy_node" type="joy_node" output="screen"> </node>
 
 	<node pkg="xb360_teleop_interface" name="xb360_teleop_interface_node" type="xb360_teleop_interface" output="screen"> </node>

@@ -48,12 +48,12 @@ private:
 	int angular_axis = 0;
 
 	// Output scale for throttling/steering commands
-	double linear_out_scale = 0.5;
-	double angular_out_scale = 0.5;
+	double linear_out_scale;
+	double angular_out_scale;
 
 	void joyCallback(const sensor_msgs::Joy& msg);
 	double linear_motion(const double forward, const double backward);
-	double angular_motion(const double angle)
+	double angular_motion(const double angle);
 
 
 };

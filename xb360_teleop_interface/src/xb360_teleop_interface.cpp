@@ -17,6 +17,9 @@ namespace xb360_teleop_interface
 {
 	Interface::Interface(ros::NodeHandle* nh)
 	{
+		nh->getParam("Legocar/linear_range", linear_out_scale);
+		nh->getParam("Legocar/angular_range", angular_out_scale);
+
 		cmd_vel_pub = nh->advertise<geometry_msgs::Twist>("cmd_vel", 1);
 		joy_sub = nh->subscribe("/joy", 1, &Interface::joyCallback, this);
 

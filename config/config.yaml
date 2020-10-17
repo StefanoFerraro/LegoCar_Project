@@ -1,0 +1,4 @@
+Legocar:
+  linear_range: 0.5
+  angular_range: 0.5
+  steering_maxDC: 0.8
