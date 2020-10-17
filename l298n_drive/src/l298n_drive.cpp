@@ -1,3 +1,13 @@
+/**
+
+\authors   		Ferraro Stefano <ferrarostefano@rocketmail.com>
+
+\date			10/10/2020
+
+\description	The package provide a basic l298n driver library for converting geometry_msgs/Twist messages into Legocar movements.
+
+*/
+
 #include <wiringPi.h>
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
@@ -53,7 +63,8 @@ void _init()
 	pinMode(En2, PWM_OUTPUT);
 
 	pwmSetMode(PWM_MODE_MS);	//mark space pwm mode, it is the classic way to intend a pwm signal, other option is balanced
-	//pwmSetClock(20);	// divide the base clock frequency for a denominator
+	int PWM_DC_Range = 1024;	//Duty Cycle range for PWMs signal 
+	pwmSetRange (PWM_DC_Range);
 
 	digitalWrite(In1, 0);
 	digitalWrite(In2, 0);
@@ -65,41 +76,39 @@ void _init()
 	ROS_INFO_STREAM("GPIO initialization completed");
 }
 
-// function for extrapolation of the linear value from the cmd_vel message
+// function for extrapolation of the linear value from the cmd_vel message to duty cycle percentage
 double cmd_vel_lin_conv(const geometry_msgs::Twist& msg)
 {	
-	return msg.linear.x/0.5 * 1024;
+	return msg.linear.x/0.5 * PWM_DC_Range;		
 }
 
-// function for extrapolation of the angular value from the cmd_vel message
+// function for extrapolation of the angular value from the cmd_vel message to duty cycle percentage
 double cmd_vel_ang_conv(const geometry_msgs::Twist& msg)
 {
-	return msg.angular.z/0.5 * (832);
+	return msg.angular.z/0.5 * (PWM_DC_Range * 0.8);	//steering motion needs to be limited to 80%, due to the constuction condition
 }
 
 static void cmd_vel_act(const geometry_msgs::Twist& msg)
 {  	
-	double throttle;
-	double stearing;
-	throttle = cmd_vel_lin_conv(msg);
-	stearing = cmd_vel_ang_conv(msg);
+	double throttle = cmd_vel_lin_conv(msg);
+	double stearing = cmd_vel_ang_conv(msg);
 	
 	
-	if(throttle <= 128) 	// brake
+	if(throttle <= (PWM_DC_Range*0.1)) 	// brake
 	{
 		digitalWrite(In1, 1);
 		digitalWrite(In2, 1);
 		pwmWrite(En1, 1024);
 	}
 
-	if (throttle > 128)		// backward
+	if (throttle > (PWM_DC_Range*0.1))		// backward
 	{
 		digitalWrite(In1, 1);
 		digitalWrite(In2, 0);
 		pwmWrite(En1, (int)throttle);
 	}
 	
-	if (throttle < -128)	// forward
+	if (throttle < -(PWM_DC_Range*0.1))	// forward
 	{
 		throttle = abs(throttle);
 		digitalWrite(In1, 0);
@@ -107,21 +116,21 @@ static void cmd_vel_act(const geometry_msgs::Twist& msg)
 		pwmWrite(En1, (int)throttle);
 	}
 
-	if (abs(stearing) <= 10)	// stearing to the center
+	if (abs(stearing) <= (PWM_DC_Range*0.05))	// stearing to the center
 	{
 		digitalWrite(In3, 0);
 		digitalWrite(In4, 0);
 		digitalWrite(En2, 1);
 	}
 
-	if (stearing > 10)		// turn left
+	if (stearing > (PWM_DC_Range*0.05))		// turn left
 	{
 		digitalWrite(In3, 0);
 		digitalWrite(In4, 1);
 		pwmWrite(En2, (int)stearing);
 	}
 
-	if (stearing < -10)		// turn right
+	if (stearing < -(PWM_DC_Range*0.05))		// turn right
 	{
 		stearing = abs(stearing);
 		digitalWrite(In3, 1);

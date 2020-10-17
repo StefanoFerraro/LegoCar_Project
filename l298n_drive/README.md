@@ -1,46 +1,25 @@
 # **L298n Driver Library**
 
-The package provide a functional interface for the control of the Legocar. Standard interfaces are also available for the xbox360 controller ([teleop twist joy](http://wiki.ros.org/teleop_twist_joy)), unfortunately I found them overcomplicated for the control of the car.
+The package provide a basic l298n driver library for converting geometry_msgs/Twist messages into Legocar movements.
 
 ## **1 - Main dependencies**
 
 * geometry_msgs/Twist
-* sensor_msgs/Joy
+* wiringPi
 * ros/ros
 
 ## **2 - Functionalities**
 
-The package subscribe to the message `/joy` (type sensor_msgs/Joy), published by the [joy node](http://wiki.ros.org/joy). A message `/cmd_vel` (type geometry_msgs/Twist) is published.
+The package subscribe to the message `/cmd_vel` (type geometry_msgs/Twist), published by [xb360_teleop_interface](../xb360_teleop_interface). It gives direct access to the GPIO of the RPi and controls the output ports, wired to the l298n module.
 
 <img src="../pics/screen_rqtgraph.png" alt="screen">
 
-The published message contains two main coordinates `cmd_vel.linear.x` that is going to be used for the throttling of the car and `cmd_vel.angular.z` for the steering.
+This library exploit [WiringPi](http://wiringpi.com/) to get access to the GPIO ports, in particular for the ports that require a PWM, administrator permission is required, for this reason in the launch file of the Legocar we have:
 
-The mapping of the bottons/axis can be modified in the header file [include/xb360_teleop_interface.h](include/xb360_teleop_interface.h): 
+````xml 
+<node pkg="l298n_drive" name="l298n_drive_node" type="l298n_drive" output="screen" launch-prefix="sudo -E LD_LIBRARY_PATH=$(optenv LD_LIBRARY_PATH)"> </node>
 
-```` C++
-int enable_button = 0;
-int forward_axis = 5;
-int backward_axis = 2;
-int angular_axis = 0;
 ````
 
-following the table below: 
+Prefix consist of `sudo -E` for running the node with administrator privileges, preserving the environment when running the command (WITH some exception, variables like PATH, LD_LIBRARY_PATH, ecc. are not preserved).  Moreover we need to specify the library path `LD_LIBRARY_PATH`, that is not preserved in as environment variable. 
 
-| Button Index | Button name | | Axis Index | Axis name    |
-|--------------|---------------------------|    |------------|-----------------------------|
-|  0           | A                         |    |  0         | Left/Right Axis stick left  |
-|  1           | B                         ||  1         | Up/Down Axis stick left     |
-|  2           | X                         ||  2         | LT                          |
-|  3           | Y                         ||  3         | Left/Right Axis stick right |
-|  4           | LB                        ||  4         | Up/Down Axis stick right    |
-|  5           | RB                        ||  5         | RT                          |
-|  6           | back                      ||  6         | cross key left/right        |
-|  7           | start                     ||  7         | cross key up/down           |
-|  8           | power                     ||            |                             |
-|  9           | Button stick left         ||            |                             |
-|  10          | Button stick right        ||           |                             |
-
-When the node is run information about the controller buttons/axes are printed:
-
-<img src="../pics/xb360_out.png" alt="screen" width="800">
