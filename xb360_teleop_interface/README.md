@@ -27,19 +27,19 @@ int angular_axis = 0;
 
 following the table below: 
 
-| Button Index | Button name | | Axis Index | Axis name    |
-|--------------|---------------------------|    |------------|-----------------------------|
-|  0           | A                         |    |  0         | Left/Right Axis stick left  |
-|  1           | B                         ||  1         | Up/Down Axis stick left     |
-|  2           | X                         ||  2         | LT                          |
-|  3           | Y                         ||  3         | Left/Right Axis stick right |
-|  4           | LB                        ||  4         | Up/Down Axis stick right    |
-|  5           | RB                        ||  5         | RT                          |
-|  6           | back                      ||  6         | cross key left/right        |
-|  7           | start                     ||  7         | cross key up/down           |
-|  8           | power                     ||            |                             |
-|  9           | Button stick left         ||            |                             |
-|  10          | Button stick right        ||           |                             |
+| Button Index | Button name | Axis Index | Axis name    |
+|--------------|---------------------------|------------|-----------------------------|
+|  0           | A                         |  0         | Left/Right Axis stick left  |
+|  1           | B                         |  1         | Up/Down Axis stick left     |
+|  2           | X                         |  2         | LT                          |
+|  3           | Y                         |  3         | Left/Right Axis stick right |
+|  4           | LB                        |  4         | Up/Down Axis stick right    |
+|  5           | RB                        |  5         | RT                          |
+|  6           | back                      |  6         | cross key left/right        |
+|  7           | start                     |  7         | cross key up/down           |
+|  8           | power                     |            |                             |
+|  9           | Button stick left         |            |                             |
+|  10          | Button stick right        |            |                             |
 
 When the node is run information about the controller buttons/axes are printed:
 
