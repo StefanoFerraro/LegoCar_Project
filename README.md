@@ -12,7 +12,7 @@ The software development is based on the **ROS** framework, code has been writte
 
 ### **1.1 - Structure**
 
-* [**l298n_drive**](l298_drive): ROS package (C++) for interpreting /cmd_vel messages and converting it into actual motion.
+* [**l298n_drive**](l298n_drive): ROS package (C++) for interpreting /cmd_vel messages and converting it into actual motion.
 * [**xb360_teleop_interface**](xb360_teleop_interface): ROS package (C++) for interpreting /joy messages and converting it into a /cmd_vel message.
 * [**line_detect**](line_detect): ROS package (Python) running the perception algorithm. 
 
