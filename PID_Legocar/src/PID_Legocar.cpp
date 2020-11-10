@@ -72,7 +72,7 @@ namespace PID_Legocar
 
 		if (PD_value >= 1)	// saturate output
 		{
-			PD_value = 1; 
+			PD_value = 1	; 
 		}
 		
 		return PD_value * delta_vel; 
@@ -84,9 +84,9 @@ namespace PID_Legocar
 		{
 			trig = true;
 			// linear motion conversion
-			cmd_vel_msg.linear.x = def_vel + PID::PID_module(CTE); 
+			cmd_vel_msg.linear.x = -(def_vel + PID::PID_module(CTE)); 
 			// angular motion conversion
-			cmd_vel_msg.angular.z = Ca*CTE.ang;
+			cmd_vel_msg.angular.z = -Ca*CTE.ang;
 
 			cmd_vel_pub.publish(cmd_vel_msg);
 		}
