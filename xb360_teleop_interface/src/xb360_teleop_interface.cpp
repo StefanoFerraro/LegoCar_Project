@@ -65,6 +65,7 @@ namespace xb360_teleop_interface
 	{
 		if(msg.buttons[enable_button]) // check if the enable button is active
 		{
+			trig = true;
 			// linear motion conversion
 			cmd_vel_msg.linear.x = Interface::linear_motion(msg.axes[forward_axis], msg.axes[backward_axis]);
 			// angular motion conversion
@@ -74,8 +75,12 @@ namespace xb360_teleop_interface
 		}
 		else	// otherwise publish a null Twist message
 		{
-			geometry_msgs::Twist cmd_vel_zero;
-			cmd_vel_pub.publish(cmd_vel_zero);			
+			if(trig)	// in order to do not have overlap of messages coming from different modes, a trigger is used to send the null message once 
+			{
+				geometry_msgs::Twist cmd_vel_zero;
+				cmd_vel_pub.publish(cmd_vel_zero);
+				trig = false;	// after executed once the trigger is disabled
+			}	
 		}
 	}
 

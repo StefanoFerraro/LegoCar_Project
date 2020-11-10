@@ -47,10 +47,14 @@ private:
 	int backward_axis = 2;
 	int angular_axis = 0;
 
+	// trigger for handling different enable buttons
+	bool trig = false;
+
 	// Output scale for throttling/steering commands
 	double linear_out_scale;
 	double angular_out_scale;
 
+	// functions declaration
 	void joyCallback(const sensor_msgs::Joy& msg);
 	double linear_motion(const double forward, const double backward);
 	double angular_motion(const double angle);

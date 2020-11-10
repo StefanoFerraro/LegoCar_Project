@@ -2,3 +2,7 @@ Legocar:
   linear_range: 0.5
   angular_range: 0.5
   steering_maxDC: 0.8
+  def_vel: -0.4
+  proportional_coeff: 0.015
+  derivative_coeff: 0.001
+  angular_coeff: 0.018

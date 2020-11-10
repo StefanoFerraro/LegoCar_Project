@@ -97,18 +97,19 @@ double cmd_vel_ang_conv(const geometry_msgs::Twist& msg)
 static void cmd_vel_act(const geometry_msgs::Twist& msg)
 {  	
 	double throttle = cmd_vel_lin_conv(msg);
-	double stearing = cmd_vel_ang_conv(msg);
+	double steering = cmd_vel_ang_conv(msg);
 	
 	
 	if(throttle <= (PWM_DC_Range*0.1)) 	// brake
 	{
 		digitalWrite(In1, 1);
-		digitalWrite(In2, 1);
-		pwmWrite(EnA, 1024);
+		digitalWrite(In2, 1)
+;		pwmWrite(EnA, 1024);
 	}
 
 	if (throttle > (PWM_DC_Range*0.1))		// backward
 	{
+		ROS_INFO_STREAM("Backward: " << throttle);
 		digitalWrite(In1, 1);
 		digitalWrite(In2, 0);
 		pwmWrite(EnA, (int)throttle);
@@ -117,31 +118,34 @@ static void cmd_vel_act(const geometry_msgs::Twist& msg)
 	if (throttle < -(PWM_DC_Range*0.1))	// forward
 	{
 		throttle = abs(throttle);
+		ROS_INFO_STREAM("Forward motion: " << throttle);
 		digitalWrite(In1, 0);
 		digitalWrite(In2, 1);
 		pwmWrite(EnA, (int)throttle);
 	}
 
-	if (abs(stearing) <= (PWM_DC_Range*0.05))	// stearing to the center
+	if (abs(steering) <= (PWM_DC_Range*0.05))	// steering to the center
 	{
 		digitalWrite(In3, 0);
 		digitalWrite(In4, 0);
 		digitalWrite(EnB, 1);
 	}
 
-	if (stearing > (PWM_DC_Range*0.05))		// turn left
+	if (steering > (PWM_DC_Range*0.05))		// turn left
 	{
+		ROS_INFO_STREAM("Steering left: " << steering);
 		digitalWrite(In3, 0);
 		digitalWrite(In4, 1);
-		pwmWrite(EnB, (int)stearing);
+		pwmWrite(EnB, (int)steering);
 	}
 
-	if (stearing < -(PWM_DC_Range*0.05))		// turn right
+	if (steering < -(PWM_DC_Range*0.05))		// turn right
 	{
-		stearing = abs(stearing);
+		steering = abs(steering);
+		ROS_INFO_STREAM("Steering right: "  << steering );
 		digitalWrite(In3, 1);
 		digitalWrite(In4, 0);
-		pwmWrite(EnB, (int)stearing);
+		pwmWrite(EnB, (int)steering);
 	}
 }
 
