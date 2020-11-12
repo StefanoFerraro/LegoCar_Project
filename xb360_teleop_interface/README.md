@@ -10,7 +10,7 @@ The package provide a functional interface for the control of the Legocar. Stand
 
 ## **2 - Functionalities**
 
-The package subscribe to the message `/joy` (type sensor_msgs/Joy), published by the [joy node](http://wiki.ros.org/joy). A message `/cmd_vel` (type geometry_msgs/Twist) is published.
+The package subscribe to the topic `/joy` (type sensor_msgs/Joy), published by the [joy node](http://wiki.ros.org/joy). Messages are published on topic `/cmd_vel` (type geometry_msgs/Twist).
 
 <img src="../pics/screen_rqtgraph.png" alt="screen">
 

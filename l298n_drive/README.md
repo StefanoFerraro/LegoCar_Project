@@ -10,7 +10,7 @@ The package provide a basic l298n driver library for converting geometry_msgs/Tw
 
 ## **2 - Functionalities**
 
-The package subscribe to the message `/cmd_vel` (type geometry_msgs/Twist), published by [xb360_teleop_interface](../xb360_teleop_interface). It gives direct access to the GPIO of the RPi and controls the output ports, wired to the l298n module.
+The package subscribe to the topic `/cmd_vel` (type geometry_msgs/Twist), published by [xb360_teleop_interface](../xb360_teleop_interface). It gives direct access to the GPIO of the RPi and controls the output ports, wired to the l298n module.
 
 <img src="../pics/screen_rqtgraph.png" alt="screen">
 
