@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
   geometry_msgs
-  line_detect
+  lane_detection
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES PID_Legocar
-  CATKIN_DEPENDS roscpp geometry_msgs sensor_msgs line_detect
+  CATKIN_DEPENDS roscpp geometry_msgs sensor_msgs lane_detection
 #  DEPENDS system_lib
 )
 

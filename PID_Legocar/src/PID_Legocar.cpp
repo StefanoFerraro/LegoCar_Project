@@ -41,7 +41,7 @@ namespace PID_Legocar
 	}
 
 	// PID module, I contribution it is not needed
-	double PID::PID_module(const line_detect::steering_angle& CTE)
+	double PID::PID_module(const lane_detection::steering_angle& CTE)
 	{
 		// offset for applying a variation in the setpoint of the velocity, to compensate the steering.
 		delta_vel = linear_out_scale - def_vel;
@@ -78,7 +78,7 @@ namespace PID_Legocar
 		return PD_value * delta_vel; 
 	}
 
-	void PID::Callback(const line_detect::steering_angle& CTE)
+	void PID::Callback(const lane_detection::steering_angle& CTE)
 	{
 		if(autopilot_act) // check if the enable button is active
 		{

@@ -2,5 +2,5 @@ WiringPi
 .catkin_tools/
 raspicam_node
 .ipynb_checkpoints
-line_detect/src/bags
-line_detect/src/line_detect_test.py
+lane_detection/src/bags
+lane_detection/src/line_detect_test.py

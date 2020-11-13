@@ -31,7 +31,7 @@
 	    <param name="framerate" value="10"/>
   	</node>
 
-	<node pkg="line_detect" name="line_detect" type="line_detect_node.py" output="screen"> </node>
+	<node pkg="lane_detection" name="lane_detection" type="lane_detection_houghtransform.py" output="screen"> </node>
 
 	<node pkg="PID_Legocar" name="PID_Legocar" type="PID_Legocar" output="screen"> </node>
   	

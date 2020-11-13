@@ -13,7 +13,7 @@
 
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Joy.h>
-#include <line_detect/steering_angle.h>
+#include <lane_detection/steering_angle.h>
 #include <ros/ros.h>
 
 #include <iostream>
@@ -75,8 +75,8 @@ private:
 
 	// functions declaration
 	void ActCallback(const sensor_msgs::Joy& msg);
-	void Callback(const line_detect::steering_angle& CTE);
-	double PID_module(const line_detect::steering_angle& CTE);
+	void Callback(const lane_detection::steering_angle& CTE);
+	double PID_module(const lane_detection::steering_angle& CTE);
 
 
 };

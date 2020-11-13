@@ -22,10 +22,10 @@ import math
 
 from sensor_msgs.msg import CameraInfo
 from sensor_msgs.msg import CompressedImage
-from line_detect.msg import steering_angle
+from lane_detection.msg import steering_angle
 
 # class for line detection of max 2 lines, based on the slope
-class LineDetector:
+class LaneDetector:
     
     # init function for 
     def __init__(self):
@@ -37,7 +37,7 @@ class LineDetector:
         self.dist_coeff = camera_info.D
         
         # pub/sub to required topics
-        self.pub1 = rospy.Publisher('/line_detect/image/compressed', CompressedImage, queue_size=1)
+        self.pub1 = rospy.Publisher('/lane_detection/image/compressed', CompressedImage, queue_size=1)
         self.pub2 = rospy.Publisher('/steering_angle', steering_angle , queue_size=1)
         self.sub = rospy.Subscriber('/raspicam_node/image/compressed', CompressedImage, self.callback, queue_size = 1)
 
@@ -206,14 +206,14 @@ class LineDetector:
          
         
 def main(args):
-    rospy.init_node('line_detect_node')
+    rospy.init_node('lane_detector_node')
     
-    ld = LineDetector()
+    ld = LaneDetector()
     
     try:
         rospy.spin()
     except KeyboardInterrupt:
-        print("Shutting down ROS Line Detector module")
+        print("Shutting down ROS Lane Detector module")
     
     cv2.destroyAllWindows()
     
