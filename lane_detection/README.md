@@ -1,39 +1,43 @@
 # **Line Detection**
 
-The package provide a functional interface between the line detection package and the l298n driver. The `/steering_angle` message coming from the line detect model is used for direct control of the steering of the LegoCar, a PD controller ('I' contribution present but not used) has been used in order to adjust throttling while steering.
+ <img src="../pics/gif/midline.gif" alt="midgif" width = 300>
+ 
+The package provide lane detection functionalities for the compressed image coming from the `raspicam_node`. A direction angle is computed and outputted with the topic `/steering_angle`.
+The Implementation presented is based on several filters applied to the image, and the subsequent application of Canny algorithm + Hought transform. 
 
 ## **1 - Main dependencies**
-
-* geometry_msgs/Twist
-* sensor_msgs/Joy
-* ros/ros
+ 
+* sensor_msgs/CameraInfo
+* sensor_msgs/CompressedImage
+* rospy
+* numpy
+* opencv (cv2)
 * line_detect/steering_angle
 
 ## **2 - Functionalities**
 
-The package subscribe to the topic `/steering_angle` (type line_detect/steering_angle), published by the [line detect](../line_detect) package. Messages are published on topic `/cmd_vel` (type geometry_msgs/Twist).
+The package subscribe to the topic `/raspicam_node/image/compressed` (type sensor_msgs/CompressedImage), published by the raspicam_node package. Messages are published on topic `/steering_angle`, a custom message designed for passing direction information to the PD controller.
 
-Subscription to the `/joy` topic is required for having a enable button (in this case the **B** button of the xbox360 joystick) in order to switch on/off the following controller.
+The acquired image go through a specific pipeline in order to extract the the lane/s from the scene. Lanes are then implied in the computation of a direction vector for the LegoCar.
 
-<img src="../pics/screen_PID.png" alt="screen">
+The pipeline of the image analysis process is:
 
-Key parameters are loaded from the configuration file [config.yaml](../config/config.yaml).
+ 1. **Image acquisition and undistortion process**
+ 2. **Filtering image (blacks)**
+ 3. **Edge detection wt Canny algorithm**
+ 4. **ROI + Lines detection wt Hough transform**
+ 5. **Averaging of detected lines based on slope**
+ 6. **Computation of middle line**
+ 
+ <img src="../pics/lane_detection_pipeline.png" alt="screen">
 
-A message of type of type geometry_msgs/Twist is composed of the following parts:
+### **2.1 - Image acquisition and undistortion process** 
+ 
+Cameras transform 3D space information into a 2D form. Since this process is not perfect (due to the imperfect production process of the lenses), we cannot trust the information coming straight from the camera as it is. Our goal is to position the car in space, in order to do it properly the camera matrix and the distortion coefficient needs to be computed and both compensated.
 
-#### **Steering**
+ <img src="../pics/grey_undistort.png" alt="screen" width = 800 >
 
-`cmd_vel_msg.angular.z = -Ca*steering_angle.ang`
 
-`steering_angle` come from the line_detect package. The steering command given is just a linear derivation of the msg steering_angle (Ca is a coefficient). 
-
-#### **Throttling**
-
-`cmd_vel_msg.linear.x = -def_vel - PID_module(steering_angle.ang)`
-
-At a fixed speed, when the car steers the speed is reduced. For this reason throttling consists of two contributions: a fixed part (`def_vel`) + a variable part controlled by a PID controller and dependent on the steering_angle msg.
-
-In this specific case a PD controller has been used since the 'I' contribution is not needed for a correct functionality of the car.
 
 
 

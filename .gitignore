@@ -4,3 +4,6 @@ raspicam_node
 .ipynb_checkpoints
 lane_detection/src/bags
 lane_detection/src/line_detect_test.py
+pics/svgs
+lane_detection/src/camerav2_640x480.yaml
+
