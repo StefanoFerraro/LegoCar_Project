@@ -62,10 +62,30 @@ projection_matrix:
 
 From this file we are going to extract `camera_matrix` and `distortion_coefficient`. Th function `undistort` (in the `callback` function) from the `OpenCV` library, will then rectify the original image. Below an example of the process where an horizontal line has been added as a reference, looking closely we can notice how the floor joints in the original image has a parabolic trend, instead in the rectified one they are perfectly straight.  
 
- <img src="../pics/grey_undistort.png" alt="screen" width = 800 >
+ <img src="../pics/gray_undistort.png" alt="screen" width = 800 >
  
 Before proceeding a `COLOR_BGR2GRAY` color conversion has been applied in order to decrease the number of color channels and concurrently the computational weight for each image.
 
+Here a sample of the output of this step:
+
+ <img src="../pics/gif/grey_undistort.gif" alt="greygif" width = 300>
+
+
+### **2.2 - Filtering image (blacks)**
+
+In order to increase the precision of the perception algorithm a further filtering of the image is required. This has been accessed after the first tests of the algorithm where the floor joints where detected as reference lanes, compromising the result. The solution was to filter out every pixel above a certain range of the gray scale.
+
+<img src="../pics/grayscale.png" alt="screen" width = 500 >
+
+We are going to create a mask with all the pixels below `50` in the grayscale, an optimal value for filtering out just the floor joints. This filter method has some dependents on the light conditions. In order to have consistent light conditions, all the tests has been carried in-house, with no interference from the sun light (artificial light constant).
+
+<img src="../pics/black.png" alt="black" width = 800 >
+
+The output mask represent in white the black pixels of the source image. 
+
+Here a sample of the output of this step:
+
+ <img src="../pics/gif/blackfilter.gif" alt="blackgif" width = 300>
 
 
 
