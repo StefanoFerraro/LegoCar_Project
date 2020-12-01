@@ -98,7 +98,7 @@ The next step consist in applying the Canny algorithm for performing edge detect
  
  Both gradients are then combined to obtain $`G`$ the $`Edge Gradient = \sqrt{G_x^2 + G_y^2}`$. The direction of the gradient is given by: 
 
-<img src="https://latex.codecogs.com/gif.latex?tan^{-1} \left( \dfrac{G_x}{G_y}\right)" style="horizontal-align:middle" />
+<img src="https://latex.codecogs.com/gif.latex?tan^{-1}\left(\dfrac{G_x}{G_y}\right)"/>
 
 3. **Non-Maximum Suppression**: This step is required in order to have a one pixel edge instead of considering redundant pixels signaling the same edge.
 
