@@ -90,16 +90,16 @@ Here a sample of the output of this step:
 The next step consist in applying the Canny algorithm for performing edge detection. The Canny algorithm consist of different steps, processed internally from the function `Canny`:
 
  1. **Noise Reduction**: The image is blurred thanks to a Gaussian filter (5x5), this aims to reduce pixel level noise.
- 2. **Intensity Gradient**: A Sobel kernel is applied to the entire image both vertically and secondly horizontally resulting in two gradients matrix $G_x$ and $G_y$. 
+ 2. **Intensity Gradient**: A Sobel kernel is applied to the entire image both vertically and secondly horizontally resulting in two gradients matrix $`G_x`$ and $`G_y`$. 
  
  <img src="../pics/sobel.png" alt="sobel" width = 300>
  
  The Sobel kernel extract any vertical or horizontal edge depending on the kernel adopted.
  
- Both gradients are then combined to obtain $G$ the $Edge Gradient = \sqrt{G_x^2 + G_y^2}$. The direction of the gradient is given by: 
- 
-$$tan^{-1} \left( \dfrac{G_x}{G_y}\right)$$
-
+ Both gradients are then combined to obtain $`G`$ the $`Edge Gradient = \sqrt{G_x^2 + G_y^2}`$. The direction of the gradient is given by: 
+```math 
+tan^{-1} \left( \dfrac{G_x}{G_y}\right)
+```
 3. **Non-Maximum Suppression**: This step is required in order to have a one pixel edge instead of considering redundant pixels signaling the same edge.
 
 4. **Hysteresis Thresholding**: Last step of the algorithm consist in selecting which edge we want to take and which discard. The threshold value consist of the gradient intensity, any edge below a certain minimum value is discarded instead any edge above a maximum value is taken. Anything in between this two limits are kept if they are connected to a over-max edge.
