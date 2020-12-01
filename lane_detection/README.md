@@ -108,9 +108,9 @@ The next step consist in applying the Canny algorithm for performing edge detect
 
 4. **Hysteresis Thresholding**: Last step of the algorithm consist in selecting which edge we want to take and which discard. The threshold value consist of the gradient intensity, any edge below a certain minimum value is discarded instead any edge above a maximum value is taken. Anything in between this two limits are kept if they are connected to a over-max edge.
 
- <img src="../pics/Hysteresis.png" alt="hyst" width = 300> 
+     <img src="../pics/Hysteresis.png" alt="hyst" width = 300> 
  
- Considering the picture above, **A**, **B/C** are going to be taken as edges, instead E and D discarded.
+     Considering the picture above, **A**, **B/C** are going to be taken as edges, instead E and D discarded.
  
 The `Canny` function implemented in OpenCV requires only (in addition to the image to process) the Max and Min threshold. The ones used in the project derive form a initial tests where the car has been placed in ideal conditions.
 

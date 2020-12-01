@@ -36,11 +36,13 @@ A [Lego Power Function XL Motor](https://www.lego.com/it-it/product/lego-power-f
 
 <img src="pics/battery_pack.JPG" alt="battery" width="400">
 
-Both motors are powered via the [Lego Battery Box](https://www.lego.com/it-it/product/lego-power-functions-battery-box-8881), that has been extended with two batteries in series for a total of 8, this in order to output the required voltage of 9V (Lego recommend 9V for this motors), also with rechargeable Ni-MH batteries (1.2V) 
-$$ V_{battery box} = 8 * 1.2V = 9.6V$$
+Both motors are powered via the [Lego Battery Box](https://www.lego.com/it-it/product/lego-power-functions-battery-box-8881), that has been extended with two batteries in series for a total of 8, this in order to output the required voltage of 9V (Lego recommend 9V for this motors), also with rechargeable Ni-MH batteries (1.2V): 
+
+<img src="https://latex.codecogs.com/gif.latex?V_{TotBattery}=8*1.2V=9.6V"/>
 
 This mod is not needed in case of non-rechargeable Ni-MH batteries (1.5V): 
-$$ V_{battery box} = 6 * 1.5V = 9V$$
+
+<img src="https://latex.codecogs.com/gif.latex?V_{TotBattery}=6*1.5V=9V"/>
 
 In the long run the rechargeable solution is preferable due to the high demand of power (with the rechargeable solution I run the system for approx. 30 minutes before having a consistent decrease in maximum speed).
 
