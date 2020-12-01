@@ -90,15 +90,19 @@ Here a sample of the output of this step:
 The next step consist in applying the Canny algorithm for performing edge detection. The Canny algorithm consist of different steps, processed internally from the function `Canny`:
 
  1. **Noise Reduction**: The image is blurred thanks to a Gaussian filter (5x5), this aims to reduce pixel level noise.
- 2. **Intensity Gradient**: A Sobel kernel is applied to the entire image both vertically and secondly horizontally resulting in two gradients matrix $`G_x`$ and $`G_y`$. 
+ 2. **Intensity Gradient**: A Sobel kernel is applied to the entire image both vertically and secondly horizontally resulting in two gradients matrix <em>Gx</em> and <em>Gy</em>. 
  
  <img src="../pics/sobel.png" alt="sobel" width = 300>
  
  The Sobel kernel extract any vertical or horizontal edge depending on the kernel adopted.
  
- Both gradients are then combined to obtain $`G`$ the $`Edge Gradient = \sqrt{G_x^2 + G_y^2}`$. The direction of the gradient is given by: 
+ Both gradients are then combined to obtain the <em>Edge Gradient = </em>
+ 
+ <img src="https://latex.codecogs.com/gif.latex?\sqrt{G_x^2+G_y^2}"/>.
+ 
+ The direction of the gradient is given by <em>Angle = </em> 
 
-<img src="https://latex.codecogs.com/gif.latex?tan^{-1}\left(\dfrac{G_x}{G_y}\right)"/>
+ <img src="https://latex.codecogs.com/gif.latex?tan^{-1}\left(\dfrac{G_x}{G_y}\right)"/>
 
 3. **Non-Maximum Suppression**: This step is required in order to have a one pixel edge instead of considering redundant pixels signaling the same edge.
 
