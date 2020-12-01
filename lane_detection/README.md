@@ -97,9 +97,9 @@ The next step consist in applying the Canny algorithm for performing edge detect
  The Sobel kernel extract any vertical or horizontal edge depending on the kernel adopted.
  
  Both gradients are then combined to obtain $`G`$ the $`Edge Gradient = \sqrt{G_x^2 + G_y^2}`$. The direction of the gradient is given by: 
-```math 
-tan^{-1} \left( \dfrac{G_x}{G_y}\right)
-```
+
+<img src="https://latex.codecogs.com/gif.latex?tan^{-1} \left( \dfrac{G_x}{G_y}\right)" style="horizontal-align:middle" />
+
 3. **Non-Maximum Suppression**: This step is required in order to have a one pixel edge instead of considering redundant pixels signaling the same edge.
 
 4. **Hysteresis Thresholding**: Last step of the algorithm consist in selecting which edge we want to take and which discard. The threshold value consist of the gradient intensity, any edge below a certain minimum value is discarded instead any edge above a maximum value is taken. Anything in between this two limits are kept if they are connected to a over-max edge.
