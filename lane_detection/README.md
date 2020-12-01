@@ -1,6 +1,6 @@
 # **Line Detection**
 
- <img src="../pics/gif/midline.gif" alt="midgif" width = 300>
+ <img src="../pics/gif/midline.gif" alt="midgif" width = 400>
  
 The package provide lane detection functionalities for the compressed image coming from the `raspicam_node`. A direction angle is computed and outputted with the topic `/steering_angle`.
 The Implementation presented is based on several filters applied to the image, and the subsequent application of Canny algorithm + Hought transform. 
@@ -34,8 +34,37 @@ The pipeline of the image analysis process is:
 ### **2.1 - Image acquisition and undistortion process** 
  
 Cameras transform 3D space information into a 2D form. Since this process is not perfect (due to the imperfect production process of the lenses), we cannot trust the information coming straight from the camera as it is. Our goal is to position the car in space, in order to do it properly the camera matrix and the distortion coefficient needs to be computed and both compensated.
+ 
+The `raspicam_node` package contains a calibration tool, called [`camera_calibration`](https://github.com/UbiquityRobotics/raspicam_node), a calibration maze is needed for this process. Once the process is completed a `.yaml` file is generated. Follows an example:
+
+````
+image_width: 640
+image_height: 480
+camera_name: camerav2_640x480
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [724.7065317897147, 0, 329.1544084760975, 0, 723.9111589306867, 222.2659871640654, 0, 0, 1]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.425024653765871, 0.2275022820178016, -0.0009324566898835676, 0.002125165132523941, 0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [661.0226440429688, 0, 332.2321572900546, 0, 0, 688.1121215820312, 220.1584891049697, 0, 0, 0, 1, 0]
+````
+
+From this file we are going to extract `camera_matrix` and `distortion_coefficient`. Th function `undistort` (in the `callback` function) from the `OpenCV` library, will then rectify the original image. Below an example of the process where an horizontal line has been added as a reference, looking closely we can notice how the floor joints in the original image has a parabolic trend, instead in the rectified one they are perfectly straight.  
 
  <img src="../pics/grey_undistort.png" alt="screen" width = 800 >
+ 
+Before proceeding a `COLOR_BGR2GRAY` color conversion has been applied in order to decrease the number of color channels and concurrently the computational weight for each image.
 
 
 
