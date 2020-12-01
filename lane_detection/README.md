@@ -64,7 +64,7 @@ From this file we are going to extract `camera_matrix` and `distortion_coefficie
 
  <img src="../pics/gray_undistort.png" alt="screen" width = 800 >
  
-Before proceeding a `COLOR_BGR2GRAY` color conversion has been applied in order to decrease the number of color channels and concurrently the computational weight for each image.
+Before proceeding a `COLOR_BGR2GRAY` color conversion has been applied in order to decrease the number of color channels and concurrently the computational weight for each image. 
 
 Here a sample of the output of this step:
 
@@ -75,17 +75,58 @@ Here a sample of the output of this step:
 
 In order to increase the precision of the perception algorithm a further filtering of the image is required. This has been accessed after the first tests of the algorithm where the floor joints where detected as reference lanes, compromising the result. The solution was to filter out every pixel above a certain range of the gray scale.
 
-<img src="../pics/grayscale.png" alt="screen" width = 500 >
+<img src="../pics/grayscale.png" alt="screen" width = 300>
 
-We are going to create a mask with all the pixels below `50` in the grayscale, an optimal value for filtering out just the floor joints. This filter method has some dependents on the light conditions. In order to have consistent light conditions, all the tests has been carried in-house, with no interference from the sun light (artificial light constant).
+We are going to create a mask with all the pixels below `50` in the grayscale, an optimal value for filtering out just the floor joints. This filter method has some dependents on the light conditions. In order to have consistent light conditions, all the tests has been carried in-house, with no interference from the sun light (artificial light constant). The output mask represent in white the black pixels of the source image. 
 
 <img src="../pics/black.png" alt="black" width = 800 >
-
-The output mask represent in white the black pixels of the source image. 
 
 Here a sample of the output of this step:
 
  <img src="../pics/gif/blackfilter.gif" alt="blackgif" width = 300>
+ 
+### **2.3 - Edge detection wt Canny algorithm**
+
+The next step consist in applying the Canny algorithm for performing edge detection. The Canny algorithm consist of different steps, processed internally from the function `Canny`:
+
+ 1. **Noise Reduction**: The image is blurred thanks to a Gaussian filter (5x5), this aims to reduce pixel level noise.
+ 2. **Intensity Gradient**: A Sobel kernel is applied to the entire image both vertically and secondly horizontally resulting in two gradients matrix $G_x$ and $G_y$. 
+ 
+ <img src="../pics/sobel.png" alt="sobel" width = 300>
+ 
+ The Sobel kernel extract any vertical or horizontal edge depending on the kernel adopted.
+ 
+ Both gradients are then combined to obtain $G$ the $Edge Gradient = \sqrt{G_x^2 + G_y^2}$. The direction of the gradient is given by: 
+ 
+$$tan^{-1} \left( \dfrac{G_x}{G_y}\right)$$
+
+3. **Non-Maximum Suppression**: This step is required in order to have a one pixel edge instead of considering redundant pixels signaling the same edge.
+
+4. **Hysteresis Thresholding**: Last step of the algorithm consist in selecting which edge we want to take and which discard. The threshold value consist of the gradient intensity, any edge below a certain minimum value is discarded instead any edge above a maximum value is taken. Anything in between this two limits are kept if they are connected to a over-max edge.
+
+ <img src="../pics/Hysteresis.png" alt="hyst" width = 300> 
+ 
+ Considering the picture above, **A**, **B/C** are going to be taken as edges, instead E and D discarded.
+ 
+The `Canny` function implemented in OpenCV requires only (in addition to the image to process) the Max and Min threshold. The ones used in the project derive form a initial tests where the car has been placed in ideal conditions.
+
+<img src="../pics/edges.png" alt="screen" width = 800>
+
+Here a sample of the output of this step:
+
+ <img src="../pics/gif/canny.gif" alt="cannygif" width = 300>
+ 
+###  **2.4 ROI + Lines detection wt Hough transform**
+
+Next step in the pipeline consist in selecting a ROI (Region Of Interest), this helps the system eliminate noise information from the image (surroundings and long distance lanes), keeping only the relevant part. The shape of the ROI is shown in the image below (red rectangle), the height of the rectangle is the 66% of the total height of the image.
+
+<img src="../pics/roi_lanes.png" alt="screen" width = 800>
+
+The image has been processed enough, and not we are in the ideal situation to perform the actual lane detection. In order to do that we are going to use the Hough transform, an algorithm specifically developed for identifying lines in an image. 
+
+ <img src="../pics/gif/avglines.gif" alt="cannygif" width = 300>
+
+
 
 
 
