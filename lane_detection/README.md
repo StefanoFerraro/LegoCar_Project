@@ -126,9 +126,35 @@ Next step in the pipeline consist in selecting a ROI (Region Of Interest), this 
 
 <img src="../pics/roi_lanes.png" alt="screen" width = 800>
 
-The image has been processed enough, and not we are in the ideal situation to perform the actual lane detection. In order to do that we are going to use the Hough transform, an algorithm specifically developed for identifying lines in an image. 
+The image is now in the ideal situation to perform the actual lane detection. In order to do that we are going to use the Hough transform, an algorithm specifically developed for identifying straight lines. 
 
+The algorithm consist in analyzing each pixel of the image and identifying if the specific pixel is part of a straight line. In order to do that, all the lines that goes through a specific pixel are considered, confronting all the lines from all the points, the algorithm extrapolate the lines that are in common between all the point (i.e. the points are part of the same line). In this process the user has to specify the minimum number of pixel to share the same line, this is required in order to eliminate noise.
+
+In order to have an efficient lane detection we need to perform an edge detection previously. In this way the hough transform is going to consider only the edges detected and not all the pixel of the image.
+
+ <img src="../pics/hough.png" alt="hough" width = 800>
+ 
+ In the image above we have four pixel considered, the algorithm, as said, consider all the lines passing through each specific pixel and picks the one that is in common. Here the minimum threshold in order to output a line is that it has to be shared among at least 3 pixels. The green line is output the final output, instead the dashed red lines are considered but discarded by the algorithm, because they do not reach the minimum threshold.
+ 
+In order to visualize this phenomena more easily we can refer to the **Polar coordinate system**, where each curve represent all the combinations of lines through a specific point. In this space an intersection between two curves, identify a shared line between pixels. The more intersections in the same region stands for more pixels sharing the same line i.e. the longer the identified line. 
+
+OpenCV provide two main implementations of this algorithm the first `HoughLines()` is the standard implementation and output, in polar coordinate the coefficients for the identified lines. The second, a more efficient implementation, is the **Probabilistic Hough Transform** `HoughLinesP()` that output start and end point of the detected line.
+
+The parameters to input are:
+`HoughLinesP(image, rho, theta, threshold, MinLinLength, MaxLineGap)`
+
+ - **image**: output of the edge detector process
+ - **rho**: the resolution for the parameter `r` (Polar coordinate) (usually 1, if incremented adjacent lines, along the r axis, are grouped together)
+ - **theta**: the resolution for the parameter `theta` (Polar coordinate) (usually PI/180, if incremented adjacent lines, along the theta axis, are grouped together)
+ - **threshold**: the minimum number of intersection (in polar coordinate) to "detect" a line
+ - **MinLinLength**: The minimum number of points that can form a line. Lines with less than this number of points are disregarded. Usually if the r and theta resolution is the minimum, this parameter should coincide with the threshold.
+ - **MaxLineGap**: Maximum gap between two pixels to be considered part of the same line.
+ 
+Again as for the Canny edge detector the best way to pick these parameters is by experience, setting a specific test environment and tunning them.
+ 
  <img src="../pics/gif/avglines.gif" alt="cannygif" width = 300>
+ 
+ 
 
 
 
