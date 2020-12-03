@@ -26,12 +26,13 @@ The pipeline of the image analysis process is:
  2. **Filtering image (blacks)**
  3. **Edge detection wt Canny algorithm**
  4. **ROI + Lines detection wt Hough transform**
- 5. **Averaging of detected lines based on slope**
- 6. **Computation of middle line**
+ 5. **Computation of middle line**
  
  <img src="../pics/lane_detection_pipeline.png" alt="screen">
 
 ### **2.1 - Image acquisition and undistortion process** 
+
+ <img src="../pics/gif/grey_undistort.gif" alt="greygif" width = 300>
  
 Cameras transform 3D space information into a 2D form. Since this process is not perfect (due to the imperfect production process of the lenses), we cannot trust the information coming straight from the camera as it is. Our goal is to position the car in space, in order to do it properly the camera matrix and the distortion coefficient needs to be computed and both compensated.
  
@@ -66,12 +67,9 @@ From this file we are going to extract `camera_matrix` and `distortion_coefficie
  
 Before proceeding a `COLOR_BGR2GRAY` color conversion has been applied in order to decrease the number of color channels and concurrently the computational weight for each image. 
 
-Here a sample of the output of this step:
-
- <img src="../pics/gif/grey_undistort.gif" alt="greygif" width = 300>
-
-
 ### **2.2 - Filtering image (blacks)**
+
+<img src="../pics/gif/blackfilter.gif" alt="blackgif" width = 300>
 
 In order to increase the precision of the perception algorithm a further filtering of the image is required. This has been accessed after the first tests of the algorithm where the floor joints where detected as reference lanes, compromising the result. The solution was to filter out every pixel above a certain range of the gray scale.
 
@@ -80,12 +78,10 @@ In order to increase the precision of the perception algorithm a further filteri
 We are going to create a mask with all the pixels below `50` in the grayscale, an optimal value for filtering out just the floor joints. This filter method has some dependents on the light conditions. In order to have consistent light conditions, all the tests has been carried in-house, with no interference from the sun light (artificial light constant). The output mask represent in white the black pixels of the source image. 
 
 <img src="../pics/black.png" alt="black" width = 800 >
-
-Here a sample of the output of this step:
-
- <img src="../pics/gif/blackfilter.gif" alt="blackgif" width = 300>
  
 ### **2.3 - Edge detection wt Canny algorithm**
+
+ <img src="../pics/gif/canny.gif" alt="cannygif" width = 300>
 
 The next step consist in applying the Canny algorithm for performing edge detection. The Canny algorithm consist of different steps, processed internally from the function `Canny`:
 
@@ -115,12 +111,10 @@ The next step consist in applying the Canny algorithm for performing edge detect
 The `Canny` function implemented in OpenCV requires only (in addition to the image to process) the Max and Min threshold. The ones used in the project derive form a initial tests where the car has been placed in ideal conditions.
 
 <img src="../pics/edges.png" alt="screen" width = 800>
-
-Here a sample of the output of this step:
-
- <img src="../pics/gif/canny.gif" alt="cannygif" width = 300>
  
-###  **2.4 ROI + Lines detection wt Hough transform**
+###  **2.4 - ROI + Lines detection wt Hough transform**
+
+ <img src="../pics/gif/avglines.gif" alt="cannygif" width = 300>
 
 Next step in the pipeline consist in selecting a ROI (Region Of Interest), this helps the system eliminate noise information from the image (surroundings and long distance lanes), keeping only the relevant part. The shape of the ROI is shown in the image below (red rectangle), the height of the rectangle is the 66% of the total height of the image.
 
@@ -150,10 +144,32 @@ The parameters to input are:
  - **MinLinLength**: The minimum number of points that can form a line. Lines with less than this number of points are disregarded. Usually if the r and theta resolution is the minimum, this parameter should coincide with the threshold.
  - **MaxLineGap**: Maximum gap between two pixels to be considered part of the same line.
  
-Again as for the Canny edge detector the best way to pick these parameters is by experience, setting a specific test environment and tunning them.
- 
- <img src="../pics/gif/avglines.gif" alt="cannygif" width = 300>
- 
+Again as for the Canny edge detector the best way to pick these parameters is by experience, setting a fixed test environment and tunning them.
+
+Applying these algorithm is going to output a series of segments of lines. The bare output of this function is shown below, printed in the original image. A function have been designed in order to merge lines together in order to obtain maximum 2 main lines. The discriminant for the grouping is the slope of the single segments. From the code the function `Average_lines` takes in all the lines segments, compute the slope and coefficient of them, group them based on the slope sign and compute an average slope. Based on the segments detected we can have 2 average lines output, 1 average line output or 0. Finally the function `Points_of_lines` takes case of computing two points (bottom and top edge of the ROI) of the average line for plotting purposes.
+
+Below are shown two example of how the implementation handles different scenarios.
+
+<img src="../pics/houghAVG1.png" alt="houghAVG1" width = 800>
+<img src="../pics/houghAVG2.png" alt="houghAVG2" width = 800>
+
+### **2.5 - Computation of middle line**
+
+<img src="../pics/gif/midline.gif" alt="midgif" width = 300>
+
+The final step consist in computing the middle line useful for directing the car. The middle line angle with respect to the vertical axis is directly related to the steering that needs to be applied in order to have the car at the center of the both lanes. In order to analyze this last part of the pipeline, let's split the analysis in 2 main scenarios: two average line are identified, one average line are identified.
+
+#### **Two average lines**
+In this case the computation of the middle line is trivial. Indeed, it consist in averaging the top points of both lines and keeping fixed the bottom one exactly to the middle of the image, this because the camera origin is placed exactly in the center of the car, so when the car is placed in the middle of the lanes we want to have e middle line to be perfectly vertical. 
+
+#### **One average line**
+In this scenario we have information just from one of the lanes, so it is impossible to position the car in space without further informations. In order to deal with that we need to assume that the car when positioned in the middle of the track and only referencing to just one the lanes must have a vertical middle line. A further step is to assume that the point at the top side of the ROI must be ideally, at the same distance from both lines.
+
+<img src="../pics/onelane.png" alt="onelane" width = 600>
+
+We need to extract the distance at the top of the ROI, in order to do that a video bag has been analyzed and data point where both lanes where present are 
+<img src="../pics/lane_distances.png" alt="lanedistances" width = 400>
+
  
 
 
