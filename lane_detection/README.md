@@ -2,7 +2,7 @@
 
  <img src="../pics/gif/midline.gif" alt="midgif" width = 400>
  
-The package provide lane detection functionalities for the compressed image coming from the `raspicam_node`. A direction angle is computed and outputted with the topic `/steering_angle`.
+The package provide lane detection functionalities for the compressed image coming from the `raspicam_node`. A direction angle is computed and outputted with the topic `/steering_angle`. A processed image is published to the `/lane_detection/image/compressed` topic.
 The Implementation presented is based on several filters applied to the image, and the subsequent application of Canny algorithm + Hought transform. 
 
 ## **1 - Main dependencies**
@@ -18,7 +18,7 @@ The Implementation presented is based on several filters applied to the image, a
 
 The package subscribe to the topic `/raspicam_node/image/compressed` (type sensor_msgs/CompressedImage), published by the raspicam_node package. Messages are published on topic `/steering_angle`, a custom message designed for passing direction information to the PD controller.
 
-The acquired image go through a specific pipeline in order to extract the the lane/s from the scene. Lanes are then implied in the computation of a direction vector for the LegoCar.
+The acquired image go through a specific pipeline in order to extract the the lane/s from the scene. Lanes are then implied in the computation of a direction vector for the LegoCar. The output of the pipeline process is then published to the `/lane_detection/image/compressed` topic.
 
 The pipeline of the image analysis process is:
 
@@ -112,11 +112,12 @@ The `Canny` function implemented in OpenCV requires only (in addition to the ima
 
 <img src="../pics/edges.png" alt="screen" width = 800>
  
+
 ###  **2.4 - ROI + Lines detection wt Hough transform**
 
  <img src="../pics/gif/avglines.gif" alt="cannygif" width = 300>
 
-Next step in the pipeline consist in selecting a ROI (Region Of Interest), this helps the system eliminate noise information from the image (surroundings and long distance lanes), keeping only the relevant part. The shape of the ROI is shown in the image below (red rectangle), the height of the rectangle is the 66% of the total height of the image.
+Next step in the pipeline consist in selecting a ROI (Region Of Interest), this helps the system eliminate noise information from the image (surroundings and long distance lanes), keeping only the relevant part. The shape of the ROI is shown in the image below (blue rectangle), the height of the rectangle is the 66% of the total height of the image.
 
 <img src="../pics/roi_lanes.png" alt="screen" width = 800>
 
@@ -157,18 +158,29 @@ Below are shown two example of how the implementation handles different scenario
 
 <img src="../pics/gif/midline.gif" alt="midgif" width = 300>
 
-The final step consist in computing the middle line useful for directing the car. The middle line angle with respect to the vertical axis is directly related to the steering that needs to be applied in order to have the car at the center of the both lanes. In order to analyze this last part of the pipeline, let's split the analysis in 2 main scenarios: two average line are identified, one average line are identified.
+The final step consist in computing the middle line useful for directing the car. The middle line angle with respect to the vertical axis is directly related to the steering that needs to be applied in order to have the car at the center of the both lanes. In order to analyze this last part of the pipeline, let's split the analysis in 2 main scenarios: two average Hough lines are identified, one average Hough line is identified.
 
-#### **Two average lines**
-In this case the computation of the middle line is trivial. Indeed, it consist in averaging the top points of both lines and keeping fixed the bottom one exactly to the middle of the image, this because the camera origin is placed exactly in the center of the car, so when the car is placed in the middle of the lanes we want to have e middle line to be perfectly vertical. 
+#### **Two average Hough lines**
+In this case the computation of the middle line is trivial. Indeed, it consist in averaging the top points of both lines and keeping fixed the bottom one exactly to the middle of the image, this because the camera origin is placed exactly in the center of the car, so when the car is placed in the middle of the lanes we want to have e middle line to be perfectly vertical. When the car is not at the center of the track, we would have a line that directs the car to the center. By averaging the top points of the ROI 
 
-#### **One average line**
-In this scenario we have information just from one of the lanes, so it is impossible to position the car in space without further informations. In order to deal with that we need to assume that the car when positioned in the middle of the track and only referencing to just one the lanes must have a vertical middle line. A further step is to assume that the point at the top side of the ROI must be ideally, at the same distance from both lines.
+#### **One average Hough line**
+In this scenario we have relative position just from one of the lanes, so it is impossible to position the car in space without further informations. Since the track has a constant width we can assume that the width as a complementary information for positioning the car. Indeed, the upper point of the line is given by considering the Hough line upper point and then adding the half of the constant width of the track projected in the 2D space of the image.
+For the bottom point, as for the previous scenario, it is fixed to the middle of the image frame.
 
-<img src="../pics/onelane.png" alt="onelane" width = 600>
+<img src="../pics/onelane.png" alt="onelane" width = 800>
 
-We need to extract the distance at the top of the ROI, in order to do that a video bag has been analyzed and data point where both lanes where present are 
-<img src="../pics/lane_distances.png" alt="lanedistances" width = 400>
+We need to extract the constant width of the track projected in the 2D at a specific image frame height (top of ROI), in order to do that a ROS video bag, of a manual ride, has been analyzed and data point where both hough lines where present are considered. The distances are here presented:
+
+<img src="../pics/lane_distances1.png" alt="lanedistances" width = 600>
+
+We have a mean distance of around 380px between, the lines.
+
+Last thing to do is extract the angle between the middle line with respect to the vertical direction. This is then published to the `/steering_angle` topic, and plotted to the published processed image send to `/lane_detection/image/compressed`.
+
+<img src="../pics/middleline.png" alt="middleline" width = 800>
+
+From the image above notice how the system behave similarly when dealing with one or two lines detected.
+
 
  
 
