@@ -181,8 +181,12 @@ Last thing to do is extract the angle between the middle line with respect to th
 
 From the image above notice how the system behave similarly when dealing with one or two lines detected.
 
+## **3 - Conclusion and Final Thoughts**
 
- 
+This part was the hardest part of the project, which involved the tuning of several parameters by hand. With the traditional Computer Vision approach I was able to develop a strong intuition for what worked and why. I also learnt that the solutions developed through such approaches aren't very optimised and can be sensistive to the chosen parameters. As a result, I developed a strong appreciation for Deep Learning based approaches to Computer Vision. Although, they can appear as a black box at times Deep learning approaches avoid the need for fine-tuning these parameters, and are inherently more robust.
+
+The challenges I encountered were almost exclusively due to non-uniform lighting conditions, shadows, discoloration and presence of floor joints. I had to constrain the test environment isolating any source of external light, and applying a uniform source of artificial light. Testing the functionality of the car in this control environment proved the good implementation of the pipeline.
+
 
 
 
