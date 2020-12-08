@@ -1,4 +1,4 @@
-# **Line Detection**
+# **Lane Detection**
 
 [![Lego Car Demo](https://img.youtube.com/vi/NI2pKg-ZRkI/0.jpg)](https://www.youtube.com/watch?v=NI2pKg-ZRkI)
 
