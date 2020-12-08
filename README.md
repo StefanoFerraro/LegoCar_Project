@@ -9,7 +9,7 @@
 
 Inspired by the Donkey Car project, I introduce the Lego Car project. The goal of the project is to design and develop an autonomous car build with elementary pieces of Lego and keeping everything else on a budget.
 
-From the hardware side, the system is based on: **Raspberry Pi4b** for controlling the motors (steering / throttling) and running the perception algorithms  + **L298n** as motor driver + **Picamera** for perception + **Xbox360 Controller** used for manual control. 
+From the hardware side, the system is based on: **Raspberry Pi4b** for controlling the motors (steering / throttling) and running the perception algorithms  + **L298n** as motor driver + **Picamera** for perception + **Xbox360 Controller** used for manual control/autopilot enable. 
 
 The software development is based on the **ROS** framework, code has been written both in **C++** and **Python**. Driver/Controller libraries has been written for this specific hardware/configuration (feel free to ask if you need help with your specific configuration).
 
