@@ -1,6 +1,8 @@
 # **Line Detection**
 
- <img src="../pics/gif/midline.gif" alt="midgif" width = 400>
+[![Lego Car Demo](https://img.youtube.com/vi/NI2pKg-ZRkI/0.jpg)](https://www.youtube.com/watch?v=NI2pKg-ZRkI)
+
+**^^^ Click for opening the video**
  
 The package provide lane detection functionalities for the compressed image coming from the `raspicam_node`. A direction angle is computed and outputted with the topic `/steering_angle`. A processed image is published to the `/lane_detection/image/compressed` topic.
 The Implementation presented is based on several filters applied to the image, and the subsequent application of Canny algorithm + Hought transform. 
