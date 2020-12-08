@@ -1,6 +1,6 @@
 # **LegoCar Project**
 
-[!Lego Car Demo](https://img.youtube.com/vi/NI2pKg-ZRkI/0.jpg)](https://www.youtube.com/watch?v=NI2pKg-ZRkI)
+[![Lego Car Demo](https://img.youtube.com/vi/NI2pKg-ZRkI/0.jpg)](https://www.youtube.com/watch?v=NI2pKg-ZRkI)
 
 
 Inspired by the Donkey Car project, I introduce the Lego Car project. The goal of the project is to design and develop an autonomous car build with elementary pieces of Lego and keeping everything else on a budget.
